@@ -135,6 +135,10 @@ export async function createTelevision(def, { title, subtitle, stage }) {
         size: def.screen.size.map((v) => v * group.scale.x),
     });
 
+    tv.setIdle = () => {
+        tv.mode = 'idle';
+    };
+
     tv.setLoading = (projectTitle) => {
         tv.mode = 'loading';
         tv.loadingTitle = projectTitle;

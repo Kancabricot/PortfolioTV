@@ -5,6 +5,7 @@ import { about } from './data/about.js';
 import { Stage } from './core/Stage.js';
 import { CameraRig } from './core/CameraRig.js';
 import { Interaction } from './core/Interaction.js';
+import { Sound } from './core/Sound.js';
 import { App } from './App.js';
 
 import { createDesk } from './objects/Desk.js';
@@ -13,6 +14,7 @@ import { createGameConsole } from './objects/GameConsole.js';
 import { createCartonStack } from './objects/CartonStack.js';
 import { createAboutCorner } from './objects/AboutCorner.js';
 import { CaseShowcase } from './objects/CaseShowcase.js';
+import { createDust } from './objects/Dust.js';
 
 /** Mirrors the cartons / about-me sides when cartonsSide is 'right'. */
 function sided(def, defaultSide) {
@@ -57,22 +59,32 @@ async function init() {
 
     stage.add(desk.group, tv.group, gameConsole.group, cartons.group, aboutCorner.group);
 
+    const dust = sceneConfig.ambience.dust.enabled ? createDust(sceneConfig.ambience.dust) : null;
+    if (dust) stage.add(dust.group);
+
     const interaction = new Interaction(stage.camera, stage.renderer.domElement);
     const showcase = new CaseShowcase(stage.scene, objects.gameCase, sceneConfig.selection, interaction);
     const app = new App({
         config: sceneConfig, rig, interaction, cartons, showcase, tv, gameConsole, aboutCorner, about,
+        sound: new Sound(),
     });
 
     stage.onTick((dt, t) => {
         rig.update(dt);
         tv.update(t);
         app.update(dt, t);
+        dust?.update(t);
     });
 
     // Exposed for debugging in the browser console.
     window.portfolio = { app, stage, rig, tv, gameConsole, cartons, aboutCorner, showcase };
 
     document.getElementById('loader').classList.add('hidden');
+
+    // Intro: the camera glides down to the desk, clicks wait until it arrives.
+    app.busy = true;
+    await rig.goTo('home', sceneConfig.camera.introDuration);
+    app.busy = false;
 }
 
 init();

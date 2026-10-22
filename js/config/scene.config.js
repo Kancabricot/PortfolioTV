@@ -24,11 +24,13 @@ export const sceneConfig = {
 
     camera: {
         fov: 38,
-        initialView: 'home',
+        initialView: 'intro',    // the camera glides from here to 'home' when the page loads
+        introDuration: 2.8,      // seconds
         transitionDuration: 1.6, // seconds
         parallax: 0.12,          // how much the camera follows the mouse
         views: {
             // minAspect: below this width/height ratio the camera backs off so the scene still fits.
+            intro: { position: [0, 4.4, 10], target: [0, 0.2, 0], minAspect: 1.75 },
             home: { position: [0, 1.95, 5.4], target: [0, 0.6, 0], minAspect: 1.75 },
         },
     },
@@ -50,6 +52,7 @@ export const sceneConfig = {
         targetShift: [-0.55, 0, 0],
         parallax: 0.04,
         minAspect: 1.3,
+        mobileMinAspect: 0.7, // phones: allow a closer camera, the frames may touch the screen edges
         closeUpFill: 0.75, // share of the screen height a frame takes when clicked
     },
 
@@ -63,6 +66,7 @@ export const sceneConfig = {
         targetShift: [0.32, 0, 0],
         parallax: 0.04,
         minAspect: 1.3,
+        mobileMinAspect: 0.7,
         // Carousel layout
         spacing: 0.36,       // horizontal gap between cases
         depthStep: 0.22,     // side cases sit further back
@@ -70,6 +74,20 @@ export const sceneConfig = {
         selectedScale: 1.15,
         sideScale: 0.8,
         visibleSide: 2,      // how many cases are shown on each side of the selected one
+    },
+
+    ambience: {
+        dust: {
+            enabled: true,
+            count: 220,
+            center: [0, 1.5, 0.2],
+            area: [7, 3, 4],     // size of the box the specks float in
+            amplitude: 0.12,     // how far each speck drifts
+            speed: 0.25,
+            size: 0.03,
+            color: '#ffd9a8',
+            opacity: 0.55,
+        },
     },
 
     lights: {

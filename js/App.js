@@ -1,11 +1,14 @@
 import * as THREE from 'three';
 import { ProjectPanel } from './ui/ProjectPanel.js';
 import { AboutPanel } from './ui/AboutPanel.js';
+import { ScreenOverlay } from './ui/ScreenOverlay.js';
 import { FloatingButton, Hint, Tooltip } from './ui/SceneHints.js';
 
 const TEXT = {
     hint: 'Clique sur un carton ou un cadre pour explorer',
     back: '◀ Retour',
+    power: '⏻ POWER',
+    sound: (muted) => (muted ? 'SON : OFF' : 'SON : ON'),
     frameLabel: { photo: 'Photo', diploma: 'Diplôme', text: 'About me' },
     projectCount: (n) => `${n} projet${n > 1 ? 's' : ''}`,
     powerOff: '<strong>⏻ POWER</strong> · revenir au bureau',
@@ -22,7 +25,7 @@ const MOBILE_QUERY = window.matchMedia('(max-width: 760px)');
  *   closeup   -> the camera looks at a single frame
  */
 export class App {
-    constructor({ config, rig, interaction, cartons, showcase, tv, gameConsole, aboutCorner, about }) {
+    constructor({ config, rig, interaction, cartons, showcase, tv, gameConsole, aboutCorner, about, sound }) {
         this.config = config;
         this.rig = rig;
         this.interaction = interaction;
@@ -31,6 +34,7 @@ export class App {
         this.tv = tv;
         this.gameConsole = gameConsole;
         this.aboutCorner = aboutCorner;
+        this.sound = sound;
 
         this.state = 'home';
         this.category = null;
@@ -48,8 +52,18 @@ export class App {
 
         this.aboutPanel = new AboutPanel(ui, about, { onBack: () => this.back() });
         this.backButton = new FloatingButton(ui, TEXT.back, () => this.back());
+        this.soundToggle = new FloatingButton(ui, TEXT.sound(sound.muted), () => {
+            sound.setMuted(!sound.muted);
+            this.soundToggle.el.textContent = TEXT.sound(sound.muted);
+            sound.play('click');
+        });
+        this.soundToggle.el.classList.add('sound-toggle', 'visible');
+        this.screenOverlay = new ScreenOverlay(ui, { powerLabel: TEXT.power, onPower: () => this.powerOff() });
 
-        showcase.onSelect = (project, index, count) => this.panel.show(this.category, project, index, count);
+        showcase.onSelect = (project, index, count) => {
+            this.panel.show(this.category, project, index, count);
+            sound.play('select');
+        };
         showcase.onActivate = (project) => this.launch(project);
 
         tv.onPageEscape = () => this.powerOff();
@@ -66,6 +80,7 @@ export class App {
             this.interaction.register(carton, {
                 onEnter: (_, e) => {
                     this.cartons.setHovered(carton, true);
+                    this.sound.play('hover');
                     if (this.state === 'home') {
                         this.tooltip.show(`<strong>${category.label}</strong> · ${TEXT.projectCount(category.projects.length)}`, e);
                     }
@@ -87,6 +102,7 @@ export class App {
                 onEnter: (_, e) => {
                     if (this.state === 'tv' || this.state === 'closeup') return;
                     this.aboutCorner.setHovered(holder, true);
+                    this.sound.play('hover');
                     if (this.state !== 'about') this.tooltip.show(`<strong>${TEXT.frameLabel[frame.kind]}</strong>`, e);
                 },
                 onMove: (_, e) => this.tooltip.move(e),
@@ -108,6 +124,7 @@ export class App {
             onEnter: (_, e) => {
                 if (this.state !== 'tv') return;
                 this.gameConsole.setPowerHighlight(true);
+                this.sound.play('hover');
                 this.tooltip.show(TEXT.powerOff, e);
             },
             onMove: (_, e) => this.tooltip.move(e),
@@ -128,13 +145,13 @@ export class App {
         const anchor = this.aboutCorner.group.position.clone().add(mirror(c.targetOffset));
         const target = anchor.clone().add(new THREE.Vector3(...c.targetShift));
         // On phones the panel sits at the bottom: center the frames and push them up instead.
-        if (MOBILE_QUERY.matches) target.set(anchor.x, anchor.y - 0.35, anchor.z);
+        if (MOBILE_QUERY.matches) target.set(anchor.x - 0.2, anchor.y - 0.6, anchor.z);
 
         return {
             position: target.clone().add(mirror(c.cameraOffset)).toArray(),
             target: target.toArray(),
             parallax: c.parallax,
-            minAspect: c.minAspect,
+            minAspect: MOBILE_QUERY.matches ? c.mobileMinAspect : c.minAspect,
         };
     }
 
@@ -168,7 +185,7 @@ export class App {
                 position: position.toArray(),
                 target: target.toArray(),
                 parallax: c.parallax,
-                minAspect: c.minAspect,
+                minAspect: MOBILE_QUERY.matches ? c.mobileMinAspect : c.minAspect,
             },
         };
     }
@@ -191,6 +208,7 @@ export class App {
 
         if (this.state === 'about' || this.state === 'closeup') this.clearState();
         this.state = 'selection';
+        this.sound.play('open');
         this.category = category;
         this.hint.hide();
         this.tooltip.hide();
@@ -205,12 +223,14 @@ export class App {
         if (this.busy || this.state === 'home' || this.state === 'tv') return;
         this.clearState();
         this.state = 'home';
+        this.sound.play('back');
         this.rig.goTo('home');
         this.hint.show();
     }
 
     openAbout() {
         if (this.busy || this.state === 'tv') return;
+        this.sound.play(this.state === 'closeup' ? 'back' : 'click');
         this.clearState();
         this.state = 'about';
         this.hint.hide();
@@ -221,6 +241,7 @@ export class App {
     closeUp(holder) {
         if (this.busy) return;
         this.state = 'closeup';
+        this.sound.play('select');
         this.aboutCorner.setHovered(holder, false);
         this.aboutCorner.setFocus(holder);
         this.aboutPanel.hide();
@@ -242,6 +263,7 @@ export class App {
         this.state = 'tv';
         this.category = null;
 
+        this.sound.play('launch');
         this.panel.hide();
         this.tooltip.hide();
         this.showcase.close({ selectedTo: this.gameConsole.slotPosition() });
@@ -249,8 +271,13 @@ export class App {
         this.tv.setLoading(project.title.toUpperCase());
 
         await this.rig.goTo(this.tvView());
-        this.tv.showPage(project.page);
-        this.tv.setInteractive(true);
+        this.sound.play('tvOn');
+        if (MOBILE_QUERY.matches) {
+            this.screenOverlay.show(project.page);
+        } else {
+            this.tv.showPage(project.page);
+            this.tv.setInteractive(true);
+        }
         this.busy = false;
     }
 
@@ -260,9 +287,15 @@ export class App {
         this.busy = true;
         this.gameConsole.setPowerHighlight(false);
         this.tooltip.hide();
+        this.sound.play('tvOff');
         window.focus(); // take keyboard focus back from the page
 
-        await this.tv.hidePage();
+        if (this.screenOverlay.isOpen) {
+            await this.screenOverlay.hide();
+            this.tv.setIdle();
+        } else {
+            await this.tv.hidePage();
+        }
         this.state = 'home';
         this.hint.show();
         await this.rig.goTo('home');
