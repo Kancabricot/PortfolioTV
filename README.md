@@ -25,6 +25,8 @@ Puis ouvrir http://localhost:5173 (aucune dépendance à installer, Three.js est
 | Créer la page d'un projet (affichée dans la TV) | copier `html/projects/_template.html`, puis `page:` dans `projects.js` |
 | Changer le style des pages projet           | `css/project-page.css`          |
 | Régler la caméra quand la TV est allumée    | `tvView` dans `scene.config.js` |
+| Compétences, liens, bio du panneau About me | `skills`, `links`, `bio` dans `about.js` |
+| Régler la caméra du coin About me           | `aboutView` dans `scene.config.js` |
 
 ### Modèles 3D
 

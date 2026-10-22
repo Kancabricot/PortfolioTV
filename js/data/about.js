@@ -18,8 +18,11 @@ export const about = {
     title: 'Game Developer & Gameplay Programmer',
     photo: 'assets/images/about/profile.png',
     bio: "Développeur gameplay passionné. Ce texte est un placeholder : écris ici quelques lignes sur toi, ton parcours et ce que tu aimes créer.",
+    // Shown in the About me panel (empty lists are hidden).
+    skills: ['Unreal Engine', 'C++', 'Blueprint', 'JavaScript'],
     links: [
         { label: 'GitHub', url: 'https://github.com/Kancabricot' },
+        { label: 'itch.io', url: 'https://kancabricot.itch.io' },
     ],
 
     frames: [

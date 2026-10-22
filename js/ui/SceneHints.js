@@ -33,3 +33,18 @@ export class Hint {
 
     hide() { this.el.classList.remove('visible'); }
 }
+
+/** Floating button at the bottom of the screen. */
+export class FloatingButton {
+    constructor(parent, label, onClick) {
+        this.el = document.createElement('button');
+        this.el.className = 'pixel-button floating-button';
+        this.el.textContent = label;
+        this.el.addEventListener('click', onClick);
+        parent.appendChild(this.el);
+    }
+
+    show() { this.el.classList.add('visible'); }
+
+    hide() { this.el.classList.remove('visible'); }
+}

@@ -13,7 +13,7 @@ const TEXT = {
 export class ProjectPanel {
     constructor(parent, callbacks) {
         this.el = document.createElement('aside');
-        this.el.className = 'project-panel';
+        this.el.className = 'side-panel project-panel';
         this.el.innerHTML = `
             <p class="panel-category"></p>
             <h2 class="panel-title"></h2>

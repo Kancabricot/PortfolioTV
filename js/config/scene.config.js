@@ -42,6 +42,17 @@ export const sceneConfig = {
         minAspect: 1.5,
     },
 
+    // About me corner overview, relative to the about corner position (x is mirrored with cartonsSide).
+    // targetShift pushes the frames to the side to leave room for the info panel.
+    aboutView: {
+        targetOffset: [0, 0.4, 0.05],
+        cameraOffset: [-0.3, 0.45, 2.9],
+        targetShift: [-0.55, 0, 0],
+        parallax: 0.04,
+        minAspect: 1.3,
+        closeUpFill: 0.75, // share of the screen height a frame takes when clicked
+    },
+
     // Project selection: game cases come out of the open carton and line up.
     selection: {
         // Where the selected case floats, relative to the carton stack (x is mirrored with cartonsSide).

@@ -60,7 +60,7 @@ async function init() {
     const interaction = new Interaction(stage.camera, stage.renderer.domElement);
     const showcase = new CaseShowcase(stage.scene, objects.gameCase, sceneConfig.selection, interaction);
     const app = new App({
-        config: sceneConfig, rig, interaction, cartons, showcase, tv, gameConsole,
+        config: sceneConfig, rig, interaction, cartons, showcase, tv, gameConsole, aboutCorner, about,
     });
 
     stage.onTick((dt, t) => {
