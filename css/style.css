@@ -1,0 +1,51 @@
+:root {
+    --bg-center: #3b2d5c;
+    --bg-edge: #120e1f;
+    --text: #f3e9ff;
+    --accent: #ffb86b;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: radial-gradient(ellipse at 50% 45%, var(--bg-center) 0%, var(--bg-edge) 75%);
+    color: var(--text);
+    font-family: 'Fredoka', sans-serif;
+}
+
+#scene-container {
+    position: fixed;
+    inset: 0;
+}
+
+#scene-container canvas { display: block; }
+
+/* ---------- Loader ---------- */
+#loader {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: var(--bg-edge);
+    transition: opacity 0.8s ease;
+    z-index: 10;
+}
+
+#loader.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loader-text {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    letter-spacing: 2px;
+    color: var(--accent);
+}
+
+.loader-text .dots { animation: blink 1s steps(2) infinite; }
+
+@keyframes blink { 50% { opacity: 0; } }
