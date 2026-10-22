@@ -315,3 +315,22 @@ export function drawGameSpine(ctx, w, h, { title, color }) {
     ctx.fillText(title, 0, 0, h * 0.8);
     ctx.restore();
 }
+
+/** TV screen while a project page is loading. */
+export function drawTvLoading(ctx, w, h, { title, time }) {
+    ctx.fillStyle = '#05070f';
+    ctx.fillRect(0, 0, w, h);
+
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#9fc3ff';
+    ctx.font = `${h * 0.04}px 'Press Start 2P', monospace`;
+    ctx.fillText(`LOADING${'.'.repeat(Math.floor(time * 3) % 4)}`, w / 2, h * 0.42);
+
+    ctx.fillStyle = '#ffd36b';
+    ctx.font = `${h * 0.06}px 'Press Start 2P', monospace`;
+    ctx.fillText(title, w / 2, h * 0.55, w * 0.9);
+
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+    for (let y = 0; y < h; y += 4) ctx.fillRect(0, y, w, 2);
+}

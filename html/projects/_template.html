@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<!--
+    Project page template.
+    1. Copy this file to html/projects/<project-id>.html
+    2. Set `page: 'html/projects/<project-id>.html'` in js/data/projects.js
+    3. Keep, duplicate or delete the blocks below (hero, facts, split, feature, game-embed, gallery).
+    Images go in assets/images/projects/<project-id>/ (paths start with ../../assets/...).
+-->
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project title</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/project-page.css">
+</head>
+<body style="--project: #8c6bd6">
+
+    <header class="hero">
+        <img class="hero-logo" src="../../assets/images/projects/project-id/cover.png" alt="">
+        <div>
+            <h1>Project title</h1>
+            <p class="subtitle">One line that sums up the project</p>
+            <ul class="tags">
+                <li>Engine</li>
+                <li>Language</li>
+                <li>Platform</li>
+            </ul>
+            <div class="actions">
+                <a class="btn" href="https://example.com" target="_blank">See project</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="section">
+        <h2>Presentation</h2>
+        <dl class="facts">
+            <div><dt>Role</dt><dd>Gameplay programmer</dd></div>
+            <div><dt>Team</dt><dd>4 people</dd></div>
+            <div><dt>Duration</dt><dd>3 months</dd></div>
+            <div><dt>Year</dt><dd>2025</dd></div>
+        </dl>
+        <div class="split">
+            <div>
+                <p>What is the project, why it exists, what you did on it.</p>
+            </div>
+            <img class="media" src="../../assets/images/projects/project-id/cover.png" alt="">
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Features</h2>
+        <div class="feature">
+            <img class="media" src="../../assets/images/projects/project-id/cover.png" alt="">
+            <div>
+                <h3>Feature name</h3>
+                <p>How it works and what was interesting to build.</p>
+            </div>
+        </div>
+        <div class="feature reverse">
+            <img class="media" src="../../assets/images/projects/project-id/cover.png" alt="">
+            <div>
+                <h3>Another feature</h3>
+                <p>Alternate sides with the "reverse" class.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="page-footer">Press POWER on the console to go back</footer>
+</body>
+</html>

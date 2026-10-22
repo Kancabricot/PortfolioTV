@@ -33,6 +33,15 @@ export const sceneConfig = {
         },
     },
 
+    // Camera when a project is launched, relative to the TV screen center.
+    // The console stays visible at the bottom so its POWER button can be clicked.
+    tvView: {
+        cameraOffset: [0, 0.5, 2.5],
+        targetOffset: [0, -0.18, 0.3],
+        parallax: 0.02,
+        minAspect: 1.5,
+    },
+
     // Project selection: game cases come out of the open carton and line up.
     selection: {
         // Where the selected case floats, relative to the carton stack (x is mirrored with cartonsSide).

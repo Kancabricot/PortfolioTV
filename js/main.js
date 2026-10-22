@@ -47,6 +47,7 @@ async function init() {
         createTelevision(objects.tv, {
             title: pixelText(`${about.firstName} ${about.lastName}`),
             subtitle: pixelText(about.title),
+            stage,
         }),
         createGameConsole(objects.console),
         createCartonStack(sided(objects.cartons, 'left'), categories),
@@ -58,7 +59,9 @@ async function init() {
 
     const interaction = new Interaction(stage.camera, stage.renderer.domElement);
     const showcase = new CaseShowcase(stage.scene, objects.gameCase, sceneConfig.selection, interaction);
-    const app = new App({ config: sceneConfig, rig, interaction, cartons, showcase });
+    const app = new App({
+        config: sceneConfig, rig, interaction, cartons, showcase, tv, gameConsole,
+    });
 
     stage.onTick((dt, t) => {
         rig.update(dt);

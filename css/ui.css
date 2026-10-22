@@ -185,3 +185,55 @@
     .panel-keys { display: none; }
     .scene-hint { width: 90%; line-height: 1.6; }
 }
+
+/* ---------- Page inside the TV (CSS3D layer) ---------- */
+.css3d-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.tv-page { pointer-events: none; }
+.tv-page.interactive { pointer-events: auto; }
+
+.tv-page-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 34px / 28px;
+    background: #000;
+}
+
+.tv-page iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: #15112a;
+}
+
+/* Scanlines + curved-glass vignette over the page */
+.tv-crt {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background: repeating-linear-gradient(transparent 0 2px, rgba(0, 0, 0, 0.1) 2px 4px);
+    box-shadow: inset 0 0 140px rgba(0, 0, 0, 0.6), inset 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.tv-page.on .tv-page-inner { animation: tv-on 0.8s ease-out both; }
+.tv-page.off .tv-page-inner { animation: tv-off 0.45s ease-in forwards; }
+
+@keyframes tv-on {
+    0%   { transform: scale(0.02, 0.004); filter: brightness(6); }
+    35%  { transform: scale(1, 0.006);    filter: brightness(4); }
+    70%  { transform: scale(1, 1);        filter: brightness(1.6); }
+    100% { transform: none;               filter: none; }
+}
+
+@keyframes tv-off {
+    0%   { transform: none;               filter: none; }
+    50%  { transform: scale(1, 0.006);    filter: brightness(4); }
+    100% { transform: scale(0, 0.004);    filter: brightness(8); opacity: 0; }
+}

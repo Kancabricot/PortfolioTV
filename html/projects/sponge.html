@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sponge</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/project-page.css">
+</head>
+<body style="--project: #f2c14e">
+
+    <header class="hero">
+        <img class="hero-logo" src="../../assets/images/projects/sponge/SpongJauneLogo.png" alt="Sponge logo">
+        <div>
+            <h1>Sponge</h1>
+            <p class="subtitle">Ordered by the city of Montpellier</p>
+            <ul class="tags">
+                <li>Blueprint</li>
+                <li>Unreal Engine</li>
+                <li>Projected on a wall</li>
+                <li>2 players</li>
+            </ul>
+            <div class="actions">
+                <a class="btn" href="https://orianneg.itch.io/sponge" target="_blank">See project</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="section">
+        <h2>"Coeur de Ville en Lumière"</h2>
+        <div class="split">
+            <div>
+                <p>Sponge was a project commissioned by the city of Montpellier for their annual event "Cœur de Ville en Lumière". The goal was to create a 2-player game lasting 3 minutes, projected onto the wall of the Agora amphitheater in Montpellier.</p>
+                <p>Players control sponges that must clean the wall while fighting off monsters that keep trying to make it dirty again. The objective is to score as many points as possible for the leaderboard.</p>
+                <p>It was a side project developed alongside our final year project.</p>
+            </div>
+            <img class="media" src="../../assets/images/projects/sponge/SpongePresentationPage.png" alt="Sponge projected on the Agora wall">
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Player</h2>
+        <div class="feature">
+            <img class="media" src="../../assets/images/projects/sponge/SpongeFillAndShoot.gif" alt="Sponge filling up and shooting bubbles">
+            <div>
+                <h3>Shoot</h3>
+                <p>As sponges, we scrub the floor as we move, automatically cleaning it. But we can also soak up water from sinks and spit out bubbles to clean the floor and even defeat monsters!</p>
+            </div>
+        </div>
+        <div class="feature reverse">
+            <img class="media" src="../../assets/images/projects/sponge/SpongeUltimate.gif" alt="Sponge ultimate bubble">
+            <div>
+                <h3>Ultimate</h3>
+                <p>We also have an ultimate ability that charges by defeating enemies. Once ready, it launches a giant bubble that explodes on the ground, cleaning a large area and dealing area-of-effect damage.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2>Optimization</h2>
+        <div class="split">
+            <div>
+                <p>Points are earned by having the cleanest surface area on the wall. To determine this, we analyze the RVT texture and calculate the percentage of visible dirt, pixel by pixel.</p>
+                <p>This method is heavy, so we use a smaller texture that mirrors the RVT. Instead of checking 1 048 576 pixels on a 1024×1024 texture, we only check 4 096 pixels on a dedicated 64×64 texture.</p>
+                <p>It slightly reduces precision, but the performance gain prevents lag on the hardware provided for the event.</p>
+            </div>
+            <img class="media" src="../../assets/images/projects/sponge/ScaledRTV.png" alt="Scaled RVT texture">
+        </div>
+    </section>
+
+    <footer class="page-footer">Press POWER on the console to go back</footer>
+</body>
+</html>

@@ -22,6 +22,9 @@ Puis ouvrir http://localhost:5173 (aucune dépendance à installer, Three.js est
 | Mettre les cartons à droite                 | `layout.cartonsSide: 'right'`   |
 | Régler le carrousel de boîtes de jeu        | `selection` dans `scene.config.js` |
 | Mettre une vraie jaquette                   | `cover: 'assets/images/projects/xxx.jpg'` dans `projects.js` |
+| Créer la page d'un projet (affichée dans la TV) | copier `html/projects/_template.html`, puis `page:` dans `projects.js` |
+| Changer le style des pages projet           | `css/project-page.css`          |
+| Régler la caméra quand la TV est allumée    | `tvView` dans `scene.config.js` |
 
 ### Modèles 3D
 
@@ -35,7 +38,8 @@ Pour la console, nomme le bouton `PowerButton`.
 index.html                 page d'entrée (reste à la racine pour l'hébergement, ex. GitHub Pages)
 css/                       feuilles de style
 html/
-  projects/                pages HTML des projets (affichées dans la TV)
+  projects/                pages HTML des projets (affichées dans la TV), _template.html pour en créer
+  games/                   jeux jouables intégrés aux pages (ex. Listrik)
 js/
   config/scene.config.js   positions, couleurs, caméra, modèles
   data/                    contenu (projets, about me)

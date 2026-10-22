@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { createGameCase, disposeObject } from './GameCase.js';
 import { dampTransform, setHighlight } from '../utils/animation.js';
 
-const EXIT_DURATION = 700; // ms before closed cases are removed
+const EXIT_DURATION = 900; // ms before closed cases are removed
 
 /**
  * The project carousel: game cases pop out of an open carton and line up,
@@ -58,18 +58,26 @@ export class CaseShowcase {
         this.select(0);
     }
 
-    /** Sends the cases back into the carton, then removes them. */
-    close() {
+    /**
+     * Sends the cases back into the carton, then removes them.
+     * selectedTo: optional world position the selected case flies to instead (the console slot).
+     */
+    close({ selectedTo } = {}) {
         if (!this.isOpen) return;
         this.unregister.forEach((off) => off());
         this.unregister = [];
 
         const leaving = this.cases;
-        this.cases = [];
-        for (const gameCase of leaving) {
-            gameCase.userData.leaving = true;
+        leaving.forEach((gameCase, i) => {
+            const toSlot = selectedTo && i === this.selected;
+            gameCase.userData.exitTarget = {
+                position: toSlot ? selectedTo.clone() : this.mouth.clone(),
+                quaternion: new THREE.Quaternion(),
+                scale: 0.001,
+            };
             setHighlight(gameCase, '#000000', 0);
-        }
+        });
+        this.cases = [];
         this.leaving.push(...leaving);
         setTimeout(() => {
             for (const gameCase of leaving) {
@@ -123,7 +131,6 @@ export class CaseShowcase {
             dampTransform(gameCase, this.targetFor(i, time), 7, dt);
         });
 
-        const exit = { position: this.mouth, scale: 0.001 };
-        for (const gameCase of this.leaving) dampTransform(gameCase, exit, 9, dt);
+        for (const gameCase of this.leaving) dampTransform(gameCase, gameCase.userData.exitTarget, 6, dt);
     }
 }

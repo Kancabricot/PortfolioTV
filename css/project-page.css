@@ -1,0 +1,231 @@
+/*
+ * Shared style for the project pages shown inside the TV (html/projects/*.html).
+ * Building blocks: .hero, .section, .split, .feature, .game-embed, .gallery, .tags, .btn
+ */
+:root {
+    --bg: #15112a;
+    --bg-alt: #1e1838;
+    --card: #261f45;
+    --text: #efe8ff;
+    --muted: #a99fc7;
+    --accent: #ffb86b;
+    --project: #8c6bd6; /* override per page: <body style="--project: #e4572e"> */
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Fredoka', sans-serif;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+img, video { max-width: 100%; display: block; }
+
+a { color: var(--accent); }
+
+h1, h2, h3 {
+    font-family: 'Press Start 2P', monospace;
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+/* Retro scrollbar */
+::-webkit-scrollbar { width: 14px; }
+::-webkit-scrollbar-track { background: var(--bg-alt); }
+::-webkit-scrollbar-thumb { background: var(--project); border: 3px solid var(--bg-alt); }
+html { scrollbar-color: var(--project) var(--bg-alt); }
+
+/* ---------- Hero ---------- */
+.hero {
+    position: relative;
+    padding: 64px 56px 48px;
+    background:
+        radial-gradient(ellipse at 80% 0%, color-mix(in srgb, var(--project) 45%, transparent), transparent 60%),
+        linear-gradient(180deg, var(--bg-alt), var(--bg));
+    border-bottom: 4px solid var(--project);
+    display: flex;
+    align-items: center;
+    gap: 40px;
+}
+
+.hero-logo {
+    width: 180px;
+    flex-shrink: 0;
+    image-rendering: auto;
+    filter: drop-shadow(0 8px 0 rgba(0, 0, 0, 0.35));
+}
+
+.hero h1 {
+    font-size: 40px;
+    color: #fff;
+    text-shadow: 4px 4px 0 var(--project);
+}
+
+.hero .subtitle {
+    margin: 10px 0 18px;
+    font-size: 20px;
+    color: var(--muted);
+}
+
+/* ---------- Tags & buttons ---------- */
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin-bottom: 20px;
+}
+
+.tags li {
+    font-size: 14px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+.btn {
+    display: inline-block;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
+    text-decoration: none;
+    color: #241a10;
+    background: var(--accent);
+    padding: 12px 18px;
+    border-radius: 6px;
+    box-shadow: 0 4px 0 #8a5a2b;
+    transition: transform 0.1s;
+}
+
+.btn:hover { transform: translateY(-2px); }
+.btn.secondary { background: var(--card); color: var(--text); box-shadow: 0 4px 0 #0c0a18; }
+
+/* ---------- Sections ---------- */
+.section { padding: 48px 56px; }
+.section:nth-of-type(even) { background: var(--bg-alt); }
+
+.section > h2 {
+    font-size: 20px;
+    margin-bottom: 24px;
+    color: var(--project);
+}
+
+.section p + p { margin-top: 14px; }
+
+/* Info cards: role, year, team, engine... */
+.facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 14px;
+    margin-bottom: 28px;
+}
+
+.facts div {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 14px 16px;
+}
+
+.facts dt { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+.facts dd { font-size: 18px; font-weight: 600; }
+
+/* Text + media side by side */
+.split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+    align-items: center;
+}
+
+.media {
+    border-radius: 12px;
+    border: 4px solid #0c0a18;
+    box-shadow: 6px 6px 0 #0c0a18;
+    overflow: hidden;
+    background: #000;
+}
+
+/* Feature block: media + text, alternate sides with .reverse */
+.feature {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 36px;
+    align-items: center;
+}
+
+.feature + .feature { margin-top: 44px; }
+.feature.reverse > :first-child { order: 2; }
+.feature h3 { font-size: 15px; margin-bottom: 12px; }
+
+/* Playable game or video */
+.game-embed {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 12px;
+    border: 4px solid #0c0a18;
+    box-shadow: 6px 6px 0 #0c0a18;
+    overflow: hidden;
+    background: #000;
+}
+
+.game-embed iframe, .game-embed video {
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.controls {
+    margin-bottom: 16px;
+    color: var(--muted);
+}
+
+.controls kbd {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    padding: 3px 7px;
+    border-radius: 4px;
+    background: var(--card);
+    border-bottom: 3px solid #0c0a18;
+    color: var(--text);
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 18px;
+}
+
+.placeholder {
+    padding: 22px;
+    border: 3px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: var(--muted);
+}
+
+/* ---------- Footer ---------- */
+.page-footer {
+    padding: 36px 56px 48px;
+    text-align: center;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+/* ---------- Narrow screens ---------- */
+@media (max-width: 700px) {
+    body { font-size: 16px; }
+    .hero { flex-direction: column; text-align: center; padding: 40px 24px 32px; gap: 20px; }
+    .hero h1 { font-size: 26px; }
+    .hero .tags, .hero .actions { justify-content: center; }
+    .hero-logo { width: 120px; }
+    .section { padding: 36px 24px; }
+    .split, .feature { grid-template-columns: 1fr; gap: 20px; }
+    .feature.reverse > :first-child { order: 0; }
+}
