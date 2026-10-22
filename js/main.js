@@ -4,12 +4,15 @@ import { about } from './data/about.js';
 
 import { Stage } from './core/Stage.js';
 import { CameraRig } from './core/CameraRig.js';
+import { Interaction } from './core/Interaction.js';
+import { App } from './App.js';
 
 import { createDesk } from './objects/Desk.js';
 import { createTelevision } from './objects/Television.js';
 import { createGameConsole } from './objects/GameConsole.js';
 import { createCartonStack } from './objects/CartonStack.js';
 import { createAboutCorner } from './objects/AboutCorner.js';
+import { CaseShowcase } from './objects/CaseShowcase.js';
 
 /** Mirrors the cartons / about-me sides when cartonsSide is 'right'. */
 function sided(def, defaultSide) {
@@ -53,13 +56,18 @@ async function init() {
 
     stage.add(desk.group, tv.group, gameConsole.group, cartons.group, aboutCorner.group);
 
+    const interaction = new Interaction(stage.camera, stage.renderer.domElement);
+    const showcase = new CaseShowcase(stage.scene, objects.gameCase, sceneConfig.selection, interaction);
+    const app = new App({ config: sceneConfig, rig, interaction, cartons, showcase });
+
     stage.onTick((dt, t) => {
         rig.update(dt);
         tv.update(t);
+        app.update(dt, t);
     });
 
     // Exposed for debugging in the browser console.
-    window.portfolio = { stage, rig, tv, gameConsole, cartons, aboutCorner };
+    window.portfolio = { app, stage, rig, tv, gameConsole, cartons, aboutCorner, showcase };
 
     document.getElementById('loader').classList.add('hidden');
 }

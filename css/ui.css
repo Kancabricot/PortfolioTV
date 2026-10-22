@@ -1,0 +1,187 @@
+/* ---------- Shared ---------- */
+#ui {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+}
+
+#ui > * { pointer-events: auto; }
+
+.pixel-button {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    color: var(--text);
+    background: #2a2140;
+    border: 2px solid #5b4a86;
+    border-radius: 6px;
+    padding: 10px 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #120e1f;
+    transition: transform 0.1s, background 0.2s, opacity 0.2s;
+}
+
+.pixel-button:hover:not(:disabled) { background: #3a2e5a; }
+.pixel-button:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 1px 0 #120e1f; }
+.pixel-button:disabled { opacity: 0.35; cursor: default; }
+
+.pixel-button.primary {
+    background: var(--accent);
+    border-color: #ffd7a8;
+    color: #241a10;
+}
+
+.pixel-button.primary:hover:not(:disabled) { background: #ffc98d; }
+
+/* ---------- Project panel ---------- */
+.project-panel {
+    --project-color: var(--accent);
+    position: absolute;
+    top: 50%;
+    right: 5vw;
+    width: min(360px, 34vw);
+    padding: 28px;
+    background: rgba(22, 17, 38, 0.82);
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    border-left: 6px solid var(--project-color);
+    border-radius: 14px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    transform: translate(40px, -50%);
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.4s ease;
+}
+
+.project-panel.visible {
+    opacity: 1;
+    transform: translate(0, -50%);
+    pointer-events: auto;
+}
+
+.panel-category {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--project-color);
+}
+
+.panel-title {
+    margin: 10px 0 6px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 20px;
+    line-height: 1.4;
+}
+
+.panel-meta {
+    font-size: 14px;
+    opacity: 0.7;
+    min-height: 1em;
+}
+
+.panel-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 12px 0;
+    list-style: none;
+}
+
+.panel-tags li {
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.panel-summary {
+    font-size: 15px;
+    line-height: 1.55;
+    opacity: 0.9;
+}
+
+.panel-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 22px 0 12px;
+}
+
+.panel-counter {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    opacity: 0.7;
+}
+
+.panel-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.panel-actions .primary { flex: 1; }
+
+.panel-keys {
+    margin-top: 14px;
+    font-size: 11px;
+    opacity: 0.45;
+    text-align: center;
+}
+
+/* ---------- Tooltip & hint ---------- */
+.scene-tooltip {
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 8px 12px;
+    font-size: 14px;
+    background: rgba(22, 17, 38, 0.9);
+    border-radius: 8px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none !important;
+    transition: opacity 0.15s;
+}
+
+.scene-tooltip.visible { opacity: 1; }
+.scene-tooltip strong { color: var(--accent); }
+
+.scene-hint {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Press Start 2P', monospace;
+    font-size: 11px;
+    color: var(--text);
+    opacity: 0;
+    text-align: center;
+    pointer-events: none !important;
+    transition: opacity 0.4s;
+}
+
+.scene-hint.visible {
+    opacity: 0.6;
+    animation: hint-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes hint-pulse { 50% { opacity: 0.25; } }
+
+/* ---------- Small screens: panel becomes a bottom sheet ---------- */
+@media (max-width: 760px) {
+    .project-panel {
+        top: auto;
+        right: 12px;
+        left: 12px;
+        bottom: 12px;
+        width: auto;
+        padding: 18px;
+        transform: translateY(40px);
+    }
+
+    .project-panel.visible { transform: translateY(0); }
+    .panel-title { font-size: 15px; }
+    .panel-summary { font-size: 14px; }
+    .panel-keys { display: none; }
+    .scene-hint { width: 90%; line-height: 1.6; }
+}

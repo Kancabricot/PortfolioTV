@@ -176,3 +176,142 @@ export function drawTvIdle(ctx, w, h, { title, subtitle, time }) {
     ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
     for (let i = 0; i < 300; i++) ctx.fillRect(Math.random() * w, Math.random() * h, 2, 2);
 }
+
+export function loadImage(url) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = url;
+    });
+}
+
+/** Draws `img` to fill the rect, cropping the overflow (like CSS object-fit: cover). */
+function drawImageCover(ctx, img, x, y, w, h) {
+    const scale = Math.max(w / img.width, h / img.height);
+    const sw = w / scale;
+    const sh = h / scale;
+    ctx.drawImage(img, (img.width - sw) / 2, (img.height - sh) / 2, sw, sh, x, y, w, h);
+}
+
+/**
+ * Game case jacket in a 16-bit cartridge style: black grid header, artwork, title bar.
+ * `image` (optional) replaces the generated artwork.
+ */
+export function drawGameCover(ctx, w, h, { title, color, label, image }) {
+    const header = h * 0.13;
+    const footer = h * 0.11;
+
+    ctx.fillStyle = '#0d0d0f';
+    ctx.fillRect(0, 0, w, h);
+
+    // Artwork
+    const artY = header;
+    const artH = h - header - footer;
+    if (image) {
+        drawImageCover(ctx, image, 0, artY, w, artH);
+    } else {
+        const sky = ctx.createLinearGradient(0, artY, 0, artY + artH);
+        sky.addColorStop(0, '#1a1033');
+        sky.addColorStop(0.55, color);
+        sky.addColorStop(1, '#ffcf8a');
+        ctx.fillStyle = sky;
+        ctx.fillRect(0, artY, w, artH);
+
+        // Striped retro sun
+        const sunY = artY + artH * 0.62;
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(w / 2, sunY, w * 0.3, Math.PI, 0);
+        ctx.clip();
+        ctx.fillStyle = '#ffe08a';
+        ctx.fillRect(0, sunY - w * 0.3, w, w * 0.3);
+        ctx.fillStyle = color;
+        for (let i = 0; i < 5; i++) ctx.fillRect(0, sunY - w * 0.04 - i * w * 0.05, w, 4 + i);
+        ctx.restore();
+
+        // Perspective floor grid
+        ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+        ctx.lineWidth = 2;
+        const floorY = sunY;
+        for (let i = -8; i <= 8; i++) {
+            ctx.beginPath();
+            ctx.moveTo(w / 2 + i * w * 0.02, floorY);
+            ctx.lineTo(w / 2 + i * w * 0.2, artY + artH);
+            ctx.stroke();
+        }
+        for (let i = 1; i < 6; i++) {
+            const y = floorY + (artY + artH - floorY) * (i / 6) ** 1.6;
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(w, y);
+            ctx.stroke();
+        }
+
+        // Big title on the artwork
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        let size = w * 0.11;
+        ctx.font = `${size}px 'Press Start 2P', monospace`;
+        while (ctx.measureText(title).width > w * 0.86 && size > 12) {
+            size -= 2;
+            ctx.font = `${size}px 'Press Start 2P', monospace`;
+        }
+        ctx.fillStyle = '#1a1033';
+        ctx.fillText(title, w / 2 + 4, artY + artH * 0.22 + 4);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(title, w / 2, artY + artH * 0.22);
+    }
+
+    // Grid header
+    ctx.fillStyle = '#0d0d0f';
+    ctx.fillRect(0, 0, w, header);
+    ctx.strokeStyle = '#2c2c33';
+    ctx.lineWidth = 2;
+    for (let x = 0; x < w; x += header / 4) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, header); ctx.stroke();
+    }
+    for (let y = 0; y < header; y += header / 4) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+    }
+    ctx.fillStyle = '#d7263d';
+    ctx.font = `italic 700 ${header * 0.5}px Fredoka, sans-serif`;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('16-BIT', w * 0.05, header / 2);
+    ctx.fillStyle = '#d9d9e0';
+    ctx.font = `600 ${header * 0.26}px Fredoka, sans-serif`;
+    ctx.textAlign = 'right';
+    ctx.fillText(label.toUpperCase(), w * 0.95, header / 2);
+
+    // Title bar
+    ctx.fillStyle = '#0d0d0f';
+    ctx.fillRect(0, h - footer, w, footer);
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    let size = footer * 0.36;
+    ctx.font = `${size}px 'Press Start 2P', monospace`;
+    while (ctx.measureText(title).width > w * 0.9 && size > 8) {
+        size -= 1;
+        ctx.font = `${size}px 'Press Start 2P', monospace`;
+    }
+    ctx.fillText(title, w / 2, h - footer / 2);
+}
+
+/** Case spine: title written bottom to top. */
+export function drawGameSpine(ctx, w, h, { title, color }) {
+    ctx.fillStyle = '#0d0d0f';
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, w, h * 0.08);
+
+    ctx.save();
+    ctx.translate(w / 2, h * 0.55);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = `${w * 0.42}px 'Press Start 2P', monospace`;
+    ctx.fillText(title, 0, 0, h * 0.8);
+    ctx.restore();
+}

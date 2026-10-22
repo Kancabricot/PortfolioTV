@@ -25,10 +25,14 @@ export class CameraRig {
         this.goTo(config.initialView, 0);
     }
 
-    /** Animates to a named view. Resolves when the move is finished. */
-    goTo(name, duration = this.config.transitionDuration) {
-        const view = this.config.views[name];
-        if (!view) throw new Error(`Unknown camera view "${name}"`);
+    /**
+     * Animates to a view: a name from config.views, or a { position, target, ... } object.
+     * Resolves when the move is finished.
+     */
+    goTo(nameOrView, duration = this.config.transitionDuration) {
+        const view = typeof nameOrView === 'string' ? this.config.views[nameOrView] : nameOrView;
+        if (!view) throw new Error(`Unknown camera view "${nameOrView}"`);
+        if (this.tween) this.tween.resolve(); // a new move cancels the previous one
         this.view = view;
 
         const toPosition = new THREE.Vector3(...view.position);

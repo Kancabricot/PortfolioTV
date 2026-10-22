@@ -33,6 +33,25 @@ export const sceneConfig = {
         },
     },
 
+    // Project selection: game cases come out of the open carton and line up.
+    selection: {
+        // Where the selected case floats, relative to the carton stack (x is mirrored with cartonsSide).
+        showcaseOffset: [0.25, 0.6, 1.3],
+        // Camera relative to the showcase. targetShift moves the cases left of the screen center
+        // to leave room for the info panel.
+        cameraOffset: [0, 0.2, 1.5],
+        targetShift: [0.32, 0, 0],
+        parallax: 0.04,
+        minAspect: 1.3,
+        // Carousel layout
+        spacing: 0.36,       // horizontal gap between cases
+        depthStep: 0.22,     // side cases sit further back
+        turn: 0.4,           // side cases turn toward the center (radians)
+        selectedScale: 1.15,
+        sideScale: 0.8,
+        visibleSide: 2,      // how many cases are shown on each side of the selected one
+    },
+
     lights: {
         hemisphere: { sky: '#9d86e0', ground: '#2a1f3d', intensity: 0.9 },
         key: { color: '#ffd2a1', intensity: 2.6, position: [-3, 5, 3], castShadow: true },
@@ -81,6 +100,15 @@ export const sceneConfig = {
             boxSize: [0.95, 0.6, 0.7],
             color: '#c49a6c',
             jitter: 0.12, // random twist between stacked boxes (radians)
+            pullDistance: 0.35, // how far a carton slides out when opened
+            hoverColor: '#ffcc88',
+        },
+
+        // Mega Drive style game case, one per project.
+        gameCase: {
+            model: null, // with a custom model, name the front mesh "Cover" to receive the jacket
+            size: [0.27, 0.38, 0.045],
+            color: '#141416',
         },
 
         about: {

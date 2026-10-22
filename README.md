@@ -20,6 +20,8 @@ Puis ouvrir http://localhost:5173 (aucune dépendance à installer, Three.js est
 | Déplacer un objet, changer couleurs/caméra  | `js/config/scene.config.js`     |
 | Remplacer un cube par un vrai modèle 3D     | `model: 'assets/models/xxx.glb'` dans `scene.config.js` |
 | Mettre les cartons à droite                 | `layout.cartonsSide: 'right'`   |
+| Régler le carrousel de boîtes de jeu        | `selection` dans `scene.config.js` |
+| Mettre une vraie jaquette                   | `cover: 'assets/images/projects/xxx.jpg'` dans `projects.js` |
 
 ### Modèles 3D
 

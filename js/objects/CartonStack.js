@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { applyTransform, box, loadOrPlaceholder } from '../core/ObjectFactory.js';
 import { canvasTexture, drawCartonLabel } from '../utils/canvasTextures.js';
+import { dampFactor, ownMaterials, setHighlight } from '../utils/animation.js';
 
 // Deterministic pseudo-random so the stack looks the same on every visit.
 const seeded = (i) => {
@@ -33,7 +34,7 @@ export async function createCartonStack(def, categories) {
 
     const cartons = await Promise.all(categories.map(async (category, i) => {
         const isTop = i === categories.length - 1;
-        const content = await loadOrPlaceholder(def, () => buildCarton(def, isTop));
+        const content = ownMaterials(await loadOrPlaceholder(def, () => buildCarton(def, isTop)));
 
         const carton = new THREE.Group();
         carton.name = `Carton:${category.id}`;
@@ -53,9 +54,42 @@ export async function createCartonStack(def, categories) {
 
         carton.position.set((seeded(i + 1) - 0.5) * 0.08, i * h, (seeded(i + 7) - 0.5) * 0.06);
         carton.rotation.y = (seeded(i + 3) - 0.5) * 2 * def.jitter;
+        carton.userData.basePosition = carton.position.clone();
+        carton.userData.pull = 0;
         group.add(carton);
         return carton;
     }));
 
-    return { group, cartons };
+    let openCarton = null;
+
+    /** Slides a carton out of the stack like a drawer (null closes it). */
+    function setOpen(carton) {
+        openCarton = carton;
+    }
+
+    function setHovered(carton, hovered) {
+        setHighlight(carton, def.hoverColor, hovered ? 0.25 : 0);
+    }
+
+    /** Point just above the open carton, in world space: where game cases come out. */
+    function mouthOf(carton) {
+        return carton.localToWorld(new THREE.Vector3(0, h * 0.8, 0));
+    }
+
+    function update(dt) {
+        const k = dampFactor(8, dt);
+        for (const carton of cartons) {
+            const { basePosition } = carton.userData;
+            const targetPull = carton === openCarton ? def.pullDistance : 0;
+            carton.userData.pull += (targetPull - carton.userData.pull) * k;
+            const { pull } = carton.userData;
+            carton.position.set(
+                basePosition.x + Math.sin(carton.rotation.y) * pull,
+                basePosition.y,
+                basePosition.z + Math.cos(carton.rotation.y) * pull,
+            );
+        }
+    }
+
+    return { group, cartons, setOpen, setHovered, mouthOf, update };
 }
