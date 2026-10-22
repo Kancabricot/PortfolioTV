@@ -229,3 +229,9 @@ html { scrollbar-color: var(--project) var(--bg-alt); }
     .split, .feature { grid-template-columns: 1fr; gap: 20px; }
     .feature.reverse > :first-child { order: 0; }
 }
+
+/* ---------- Bilingual content ----------
+ * Write each text twice with lang="en" and lang="fr"; js/project-page.js picks one.
+ */
+html:not([data-lang="fr"]) body [lang="fr"],
+html[data-lang="fr"] body [lang="en"] { display: none !important; }

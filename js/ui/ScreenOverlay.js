@@ -41,6 +41,11 @@ export class ScreenOverlay {
         this.el.classList.add('on');
     }
 
+    /** Reloads the page currently shown (e.g. in another language). */
+    reload(url) {
+        if (this.isOpen) this.iframe.src = url;
+    }
+
     hide() {
         return new Promise((resolve) => {
             this.el.classList.remove('on');

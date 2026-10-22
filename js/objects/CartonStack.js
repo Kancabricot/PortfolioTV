@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { applyTransform, box, loadOrPlaceholder } from '../core/ObjectFactory.js';
 import { canvasTexture, drawCartonLabel } from '../utils/canvasTextures.js';
 import { dampFactor, ownMaterials, setHighlight } from '../utils/animation.js';
+import { tr } from '../i18n.js';
 
 // Deterministic pseudo-random so the stack looks the same on every visit.
 const seeded = (i) => {
@@ -44,13 +45,14 @@ export async function createCartonStack(def, categories) {
         const label = new THREE.Mesh(
             new THREE.PlaneGeometry(w * 0.9, h * 0.9),
             new THREE.MeshStandardMaterial({
-                map: canvasTexture(512, 320, (ctx, cw, ch) => drawCartonLabel(ctx, cw, ch, category)),
+                map: canvasTexture(512, 320, (ctx, cw, ch) => drawCartonLabel(ctx, cw, ch, { label: tr(category.label) })),
                 transparent: true,
                 roughness: 0.9,
             }),
         );
         label.position.set(0, h / 2, d / 2 + 0.002);
         carton.add(label);
+        carton.userData.label = label;
 
         carton.position.set((seeded(i + 1) - 0.5) * 0.08, i * h, (seeded(i + 7) - 0.5) * 0.06);
         carton.rotation.y = (seeded(i + 3) - 0.5) * 2 * def.jitter;
@@ -91,5 +93,13 @@ export async function createCartonStack(def, categories) {
         }
     }
 
-    return { group, cartons, setOpen, setHovered, mouthOf, update };
+    /** Redraws the labels in the current language. */
+    function refreshTexts() {
+        for (const carton of cartons) {
+            const { category, label } = carton.userData;
+            label.material.map.redraw((ctx, cw, ch) => drawCartonLabel(ctx, cw, ch, { label: tr(category.label) }));
+        }
+    }
+
+    return { group, cartons, setOpen, setHovered, mouthOf, update, refreshTexts };
 }

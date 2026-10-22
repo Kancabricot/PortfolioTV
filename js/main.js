@@ -7,6 +7,7 @@ import { CameraRig } from './core/CameraRig.js';
 import { Interaction } from './core/Interaction.js';
 import { Sound } from './core/Sound.js';
 import { App } from './App.js';
+import { onLanguageChange, tr } from './i18n.js';
 
 import { createDesk } from './objects/Desk.js';
 import { createTelevision } from './objects/Television.js';
@@ -27,6 +28,12 @@ function sided(def, defaultSide) {
 /** The pixel font has no accented capitals: 'TIMOTHÉE' -> 'TIMOTHEE'. */
 const pixelText = (text) => text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
 
+/** Title screen texts of the TV, in the current language. */
+const tvTexts = () => ({
+    title: pixelText(`${about.firstName} ${about.lastName}`),
+    subtitle: pixelText(tr(about.title)),
+});
+
 async function waitForFonts() {
     // Canvas textures need the web fonts to be ready before drawing.
     await Promise.all([
@@ -46,11 +53,7 @@ async function init() {
 
     const [desk, tv, gameConsole, cartons, aboutCorner] = await Promise.all([
         createDesk(objects.desk),
-        createTelevision(objects.tv, {
-            title: pixelText(`${about.firstName} ${about.lastName}`),
-            subtitle: pixelText(about.title),
-            stage,
-        }),
+        createTelevision(objects.tv, { texts: tvTexts(), stage }),
         createGameConsole(objects.console),
         createCartonStack(sided(objects.cartons, 'left'), categories),
         // About corner sits on the opposite side of the cartons.
@@ -61,6 +64,8 @@ async function init() {
 
     const dust = sceneConfig.ambience.dust.enabled ? createDust(sceneConfig.ambience.dust) : null;
     if (dust) stage.add(dust.group);
+
+    onLanguageChange(() => tv.setTexts(tvTexts()));
 
     const interaction = new Interaction(stage.camera, stage.renderer.domElement);
     const showcase = new CaseShowcase(stage.scene, objects.gameCase, sceneConfig.selection, interaction);

@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { loadOrPlaceholder } from '../core/ObjectFactory.js';
+import { tr } from '../i18n.js';
 import {
     canvasTexture, drawGameCover, drawGameSpine, loadImage,
 } from '../utils/canvasTextures.js';
@@ -28,13 +29,23 @@ export async function createGameCase(def, project, category) {
     // Jacket
     const cw = Math.round(w * COVER_PX);
     const ch = Math.round(h * COVER_PX);
-    const coverInfo = { title: project.title, color: project.color, label: category.label };
-    const coverTexture = canvasTexture(cw, ch, (ctx) => drawGameCover(ctx, cw, ch, coverInfo));
+    let image = null;
+    const drawCover = (ctx) => drawGameCover(ctx, cw, ch, {
+        title: tr(project.title),
+        color: project.color,
+        label: tr(category.label),
+        image,
+    });
+    const coverTexture = canvasTexture(cw, ch, drawCover);
     if (project.cover) {
         loadImage(project.cover)
-            .then((image) => coverTexture.redraw((ctx) => drawGameCover(ctx, cw, ch, { ...coverInfo, image })))
+            .then((loaded) => {
+                image = loaded;
+                coverTexture.redraw(drawCover);
+            })
             .catch(() => console.warn(`Could not load cover "${project.cover}"`));
     }
+    group.userData.refreshTexts = () => coverTexture.redraw(drawCover);
     const coverMaterial = new THREE.MeshStandardMaterial({ map: coverTexture, roughness: 0.3 });
 
     const customCover = content.getObjectByName('Cover');

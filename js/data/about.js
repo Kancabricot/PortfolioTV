@@ -11,13 +11,21 @@
  *   rotationY: turn toward the camera (radians)
  *   lean     : how much the frame leans back (radians)
  *   size     : [width, height]
+ *
+ * Texts can be a plain string (same in every language) or { en: '...', fr: '...' }.
  */
 export const about = {
     firstName: 'Timothée',
     lastName: 'Fontan',
-    title: 'Game Developer & Gameplay Programmer',
+    title: {
+        en: 'Game Developer & Gameplay Programmer',
+        fr: 'Développeur de jeux & Gameplay Programmer',
+    },
     photo: 'assets/images/about/profile.png',
-    bio: "Développeur gameplay passionné. Ce texte est un placeholder : écris ici quelques lignes sur toi, ton parcours et ce que tu aimes créer.",
+    bio: {
+        en: 'Passionate gameplay developer. This text is a placeholder: write a few lines about you, your background and what you love to create.',
+        fr: 'Développeur gameplay passionné. Ce texte est un placeholder : écris ici quelques lignes sur toi, ton parcours et ce que tu aimes créer.',
+    },
     // Shown in the About me panel (empty lists are hidden).
     skills: ['Unreal Engine', 'C++', 'Blueprint', 'JavaScript'],
     links: [
@@ -28,9 +36,9 @@ export const about = {
     frames: [
         {
             kind: 'diploma',
-            heading: 'Diplôme',
-            title: 'Nom du diplôme',
-            subtitle: 'École — Année',
+            heading: { en: 'Diploma', fr: 'Diplôme' },
+            title: { en: 'Diploma name', fr: 'Nom du diplôme' },
+            subtitle: { en: 'School — Year', fr: 'École — Année' },
             position: [0.25, 0, -0.4],
             rotationY: -0.1,
             lean: 0.15,
@@ -38,7 +46,7 @@ export const about = {
         },
         {
             kind: 'text',
-            title: 'About me',
+            title: { en: 'About me', fr: 'À propos' },
             position: [-0.6, 0, 0.1],
             rotationY: 0.15,
             lean: 0.18,

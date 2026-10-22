@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { applyTransform, box, enableShadows } from '../core/ObjectFactory.js';
 import { dampFactor, setHighlight } from '../utils/animation.js';
+import { tr } from '../i18n.js';
 import {
     canvasTexture, drawDiploma, drawPhotoPlaceholder, drawTextCard,
 } from '../utils/canvasTextures.js';
@@ -25,28 +26,42 @@ function coverTexture(url, width, height) {
     return texture;
 }
 
-function frameContent(frame, about, w, h) {
-    const cw = Math.round(w * PX_PER_UNIT);
-    const ch = Math.round(h * PX_PER_UNIT);
+/** Draw function for the frame's picture, in the current language (null for photos). */
+function frameDrawer(frame, about, cw, ch) {
     const name = `${about.firstName} ${about.lastName}`;
-
     switch (frame.kind) {
         case 'photo':
-            if (about.photo) return coverTexture(about.photo, w, h);
-            return canvasTexture(cw, ch, (ctx) => drawPhotoPlaceholder(ctx, cw, ch, {
+            if (about.photo) return null;
+            return (ctx) => drawPhotoPlaceholder(ctx, cw, ch, {
                 initials: `${about.firstName[0]}${about.lastName[0]}`,
-            }));
+            });
         case 'diploma':
-            return canvasTexture(cw, ch, (ctx) => drawDiploma(ctx, cw, ch, { ...frame, name }));
+            return (ctx) => drawDiploma(ctx, cw, ch, {
+                heading: tr(frame.heading),
+                title: tr(frame.title),
+                subtitle: tr(frame.subtitle),
+                name,
+            });
         case 'text':
-            return canvasTexture(cw, ch, (ctx) => drawTextCard(ctx, cw, ch, {
-                title: frame.title ?? name,
-                subtitle: frame.subtitle ?? about.title,
-                text: frame.text ?? about.bio,
-            }));
+            return (ctx) => drawTextCard(ctx, cw, ch, {
+                title: tr(frame.title) ?? name,
+                subtitle: tr(frame.subtitle ?? about.title),
+                text: tr(frame.text ?? about.bio),
+            });
         default:
             throw new Error(`Unknown frame kind "${frame.kind}"`);
     }
+}
+
+function frameContent(frame, about, w, h) {
+    const cw = Math.round(w * PX_PER_UNIT);
+    const ch = Math.round(h * PX_PER_UNIT);
+    const draw = frameDrawer(frame, about, cw, ch);
+    if (!draw) return coverTexture(about.photo, w, h);
+
+    const texture = canvasTexture(cw, ch, draw);
+    texture.userData.refresh = () => texture.redraw(draw);
+    return texture;
 }
 
 function buildFrame(frame, about, frameColor) {
@@ -140,5 +155,10 @@ export async function createAboutCorner(def, about) {
         }
     }
 
-    return { group, frames, closeUpView, setHovered, setFocus, update };
+    /** Redraws the frames' texts in the current language. */
+    function refreshTexts() {
+        for (const holder of frames) holder.userData.picture.material.map.userData.refresh?.();
+    }
+
+    return { group, frames, closeUpView, setHovered, setFocus, update, refreshTexts };
 }

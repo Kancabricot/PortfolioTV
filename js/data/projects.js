@@ -6,6 +6,8 @@
  *
  * Add a category or a project by adding an entry: the scene builds itself from this list.
  *
+ * Texts can be a plain string (same in every language) or { en: '...', fr: '...' }.
+ *
  * Project fields:
  *   id       : unique id
  *   title    : name on the game case
@@ -16,11 +18,12 @@
  *              (copy html/projects/_template.html to start a new one)
  */
 const IMG = 'assets/images/projects';
+const TODO = { en: 'Summary to write.', fr: 'Résumé à écrire.' };
 
 export const categories = [
     {
         id: 'school',
-        label: "Projets d'école",
+        label: { en: 'School projects', fr: "Projets d'école" },
         projects: [
             {
                 id: 'core-defender',
@@ -30,7 +33,7 @@ export const categories = [
                 year: '',
                 role: '',
                 tags: ['C++', 'Unreal Engine 5', 'PC'],
-                summary: 'Résumé à écrire.',
+                summary: TODO,
                 page: 'html/projects/core-defender.html',
             },
             {
@@ -40,8 +43,11 @@ export const categories = [
                 color: '#f2c14e',
                 year: '',
                 role: '',
-                tags: ['Blueprint', 'Unreal Engine', 'Mur / PC'],
-                summary: 'Jeu 2 joueurs projeté sur le mur de l\'Agora, commandé par la ville de Montpellier pour « Cœur de Ville en Lumière ».',
+                tags: ['Blueprint', 'Unreal Engine', { en: 'Wall / PC', fr: 'Mur / PC' }],
+                summary: {
+                    en: '2-player game projected on the Agora wall, ordered by the city of Montpellier for "Cœur de Ville en Lumière".',
+                    fr: 'Jeu 2 joueurs projeté sur le mur de l\'Agora, commandé par la ville de Montpellier pour « Cœur de Ville en Lumière ».',
+                },
                 page: 'html/projects/sponge.html',
             },
             {
@@ -52,7 +58,7 @@ export const categories = [
                 year: '',
                 role: '',
                 tags: ['Blueprint', 'Unreal Engine', 'PC'],
-                summary: 'Résumé à écrire.',
+                summary: TODO,
                 page: 'html/projects/mara.html',
             },
             {
@@ -62,8 +68,8 @@ export const categories = [
                 color: '#3fa34d',
                 year: '',
                 role: '',
-                tags: ['C++', 'Sans moteur', 'PC'],
-                summary: 'Résumé à écrire.',
+                tags: ['C++', { en: 'No engine', fr: 'Sans moteur' }, 'PC'],
+                summary: TODO,
                 page: 'html/projects/maze.html',
             },
             {
@@ -74,7 +80,10 @@ export const categories = [
                 year: '',
                 role: 'Solo',
                 tags: ['JavaScript', 'Phaser 3', 'Web'],
-                summary: 'Mon tout premier jeu : un puzzle-platformer autour d\'une batterie portée par un petit robot. Jouable directement dans la TV !',
+                summary: {
+                    en: 'My very first game: a puzzle-platformer built around a battery carried by a small robot. Playable right inside the TV!',
+                    fr: 'Mon tout premier jeu : un puzzle-platformer autour d\'une batterie portée par un petit robot. Jouable directement dans la TV !',
+                },
                 page: 'html/projects/listrik.html',
             },
         ],
@@ -91,7 +100,7 @@ export const categories = [
                 year: '',
                 role: '',
                 tags: ['Blueprint', 'Unreal Engine', 'PC'],
-                summary: 'Résumé à écrire.',
+                summary: TODO,
                 page: 'html/projects/build-and-groove.html',
             },
         ],
@@ -107,8 +116,8 @@ export const categories = [
                 color: '#66c0f4',
                 year: '',
                 role: '',
-                tags: ['Multi-moteurs', 'Jam', 'PC'],
-                summary: 'Résumé à écrire.',
+                tags: [{ en: 'Multiple engines', fr: 'Multi-moteurs' }, 'Jam', 'PC'],
+                summary: TODO,
                 page: 'html/projects/game-jam.html',
             },
         ],

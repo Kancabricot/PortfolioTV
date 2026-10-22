@@ -5,12 +5,17 @@
     2. Set `page: 'html/projects/<project-id>.html'` in js/data/projects.js
     3. Keep, duplicate or delete the blocks below (hero, facts, split, feature, game-embed, gallery).
     Images go in assets/images/projects/<project-id>/ (paths start with ../../assets/...).
+
+    Languages: write each text twice, with lang="en" and lang="fr".
+    Only the language picked in the portfolio is shown (see js/project-page.js).
+    Text that is the same in both languages (names, tags like "C++") needs no lang attribute.
 -->
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project title</title>
+    <script src="../../js/project-page.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/project-page.css">
 </head>
@@ -20,52 +25,59 @@
         <img class="hero-logo" src="../../assets/images/projects/project-id/cover.png" alt="">
         <div>
             <h1>Project title</h1>
-            <p class="subtitle">One line that sums up the project</p>
+            <p class="subtitle" lang="en">One line that sums up the project</p>
+            <p class="subtitle" lang="fr">Une phrase qui résume le projet</p>
             <ul class="tags">
-                <li>Engine</li>
-                <li>Language</li>
-                <li>Platform</li>
+                <li>Unreal Engine</li>
+                <li>C++</li>
+                <li>PC</li>
             </ul>
             <div class="actions">
-                <a class="btn" href="https://example.com" target="_blank">See project</a>
+                <a class="btn" href="https://example.com" target="_blank"><span lang="en">See project</span><span lang="fr">Voir le projet</span></a>
             </div>
         </div>
     </header>
 
     <section class="section">
-        <h2>Presentation</h2>
+        <h2><span lang="en">Presentation</span><span lang="fr">Présentation</span></h2>
         <dl class="facts">
-            <div><dt>Role</dt><dd>Gameplay programmer</dd></div>
-            <div><dt>Team</dt><dd>4 people</dd></div>
-            <div><dt>Duration</dt><dd>3 months</dd></div>
-            <div><dt>Year</dt><dd>2025</dd></div>
+            <div><dt><span lang="en">Role</span><span lang="fr">Rôle</span></dt><dd>Gameplay programmer</dd></div>
+            <div><dt><span lang="en">Team</span><span lang="fr">Équipe</span></dt><dd><span lang="en">4 people</span><span lang="fr">4 personnes</span></dd></div>
+            <div><dt><span lang="en">Duration</span><span lang="fr">Durée</span></dt><dd><span lang="en">3 months</span><span lang="fr">3 mois</span></dd></div>
+            <div><dt><span lang="en">Year</span><span lang="fr">Année</span></dt><dd>2025</dd></div>
         </dl>
         <div class="split">
             <div>
-                <p>What is the project, why it exists, what you did on it.</p>
+                <p lang="en">What is the project, why it exists, what you did on it.</p>
+                <p lang="fr">Ce qu'est le projet, pourquoi il existe, ce que tu as fait dessus.</p>
             </div>
             <img class="media" src="../../assets/images/projects/project-id/cover.png" alt="">
         </div>
     </section>
 
     <section class="section">
-        <h2>Features</h2>
+        <h2><span lang="en">Features</span><span lang="fr">Fonctionnalités</span></h2>
         <div class="feature">
             <img class="media" src="../../assets/images/projects/project-id/cover.png" alt="">
             <div>
-                <h3>Feature name</h3>
-                <p>How it works and what was interesting to build.</p>
+                <h3><span lang="en">Feature name</span><span lang="fr">Nom de la fonctionnalité</span></h3>
+                <p lang="en">How it works and what was interesting to build.</p>
+                <p lang="fr">Comment ça marche et ce qui était intéressant à construire.</p>
             </div>
         </div>
         <div class="feature reverse">
             <img class="media" src="../../assets/images/projects/project-id/cover.png" alt="">
             <div>
-                <h3>Another feature</h3>
-                <p>Alternate sides with the "reverse" class.</p>
+                <h3><span lang="en">Another feature</span><span lang="fr">Une autre fonctionnalité</span></h3>
+                <p lang="en">Alternate sides with the "reverse" class.</p>
+                <p lang="fr">Alterne les côtés avec la classe « reverse ».</p>
             </div>
         </div>
     </section>
 
-    <footer class="page-footer">Press POWER on the console to go back</footer>
+    <footer class="page-footer">
+        <span lang="en">Press POWER on the console to go back</span>
+        <span lang="fr">Appuie sur POWER sur la console pour revenir</span>
+    </footer>
 </body>
 </html>

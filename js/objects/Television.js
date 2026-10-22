@@ -75,7 +75,8 @@ function createPageLayer(screenSize) {
  * The CRT TV. Screen modes: 'idle' title screen, 'loading', 'page' (project page), 'off' (black).
  * Set `onPageEscape` to react to the Escape key pressed inside the page.
  */
-export async function createTelevision(def, { title, subtitle, stage }) {
+export async function createTelevision(def, { texts, stage }) {
+    let { title, subtitle } = texts;
     const content = await loadOrPlaceholder(def, () => buildPlaceholder(def));
 
     const group = applyTransform(new THREE.Group(), def);
@@ -135,6 +136,11 @@ export async function createTelevision(def, { title, subtitle, stage }) {
         size: def.screen.size.map((v) => v * group.scale.x),
     });
 
+    /** Changes the idle title screen texts (e.g. on language change). */
+    tv.setTexts = (newTexts) => {
+        ({ title, subtitle } = newTexts);
+    };
+
     tv.setIdle = () => {
         tv.mode = 'idle';
     };
@@ -150,6 +156,11 @@ export async function createTelevision(def, { title, subtitle, stage }) {
         page.object.visible = true;
         page.element.classList.remove('off');
         page.element.classList.add('on');
+    };
+
+    /** Reloads the page currently on screen (e.g. in another language). */
+    tv.reloadPage = (url) => {
+        if (tv.mode === 'page') page.iframe.src = url;
     };
 
     tv.setInteractive = (interactive) => page.element.classList.toggle('interactive', interactive);

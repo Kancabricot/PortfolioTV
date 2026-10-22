@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sponge</title>
+    <script src="../../js/project-page.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/project-page.css">
 </head>
@@ -13,15 +14,16 @@
         <img class="hero-logo" src="../../assets/images/projects/sponge/SpongJauneLogo.png" alt="Sponge logo">
         <div>
             <h1>Sponge</h1>
-            <p class="subtitle">Ordered by the city of Montpellier</p>
+            <p class="subtitle" lang="en">Ordered by the city of Montpellier</p>
+            <p class="subtitle" lang="fr">Commande de la ville de Montpellier</p>
             <ul class="tags">
                 <li>Blueprint</li>
                 <li>Unreal Engine</li>
-                <li>Projected on a wall</li>
-                <li>2 players</li>
+                <li><span lang="en">Projected on a wall</span><span lang="fr">Projeté sur un mur</span></li>
+                <li><span lang="en">2 players</span><span lang="fr">2 joueurs</span></li>
             </ul>
             <div class="actions">
-                <a class="btn" href="https://orianneg.itch.io/sponge" target="_blank">See project</a>
+                <a class="btn" href="https://orianneg.itch.io/sponge" target="_blank"><span lang="en">See project</span><span lang="fr">Voir le projet</span></a>
             </div>
         </div>
     </header>
@@ -29,45 +31,60 @@
     <section class="section">
         <h2>"Coeur de Ville en Lumière"</h2>
         <div class="split">
-            <div>
+            <div lang="en">
                 <p>Sponge was a project commissioned by the city of Montpellier for their annual event "Cœur de Ville en Lumière". The goal was to create a 2-player game lasting 3 minutes, projected onto the wall of the Agora amphitheater in Montpellier.</p>
                 <p>Players control sponges that must clean the wall while fighting off monsters that keep trying to make it dirty again. The objective is to score as many points as possible for the leaderboard.</p>
                 <p>It was a side project developed alongside our final year project.</p>
+            </div>
+            <div lang="fr">
+                <p>Sponge est un projet commandé par la ville de Montpellier pour son événement annuel « Cœur de Ville en Lumière ». L'objectif : créer un jeu à 2 joueurs de 3 minutes, projeté sur le mur de l'amphithéâtre de l'Agora à Montpellier.</p>
+                <p>Les joueurs incarnent des éponges qui doivent nettoyer le mur tout en repoussant des monstres qui essaient sans cesse de le salir. Le but est de marquer un maximum de points pour le classement.</p>
+                <p>C'était un projet parallèle, développé en même temps que notre projet de fin d'études.</p>
             </div>
             <img class="media" src="../../assets/images/projects/sponge/SpongePresentationPage.png" alt="Sponge projected on the Agora wall">
         </div>
     </section>
 
     <section class="section">
-        <h2>Player</h2>
+        <h2><span lang="en">Player</span><span lang="fr">Joueur</span></h2>
         <div class="feature">
             <img class="media" src="../../assets/images/projects/sponge/SpongeFillAndShoot.gif" alt="Sponge filling up and shooting bubbles">
             <div>
-                <h3>Shoot</h3>
-                <p>As sponges, we scrub the floor as we move, automatically cleaning it. But we can also soak up water from sinks and spit out bubbles to clean the floor and even defeat monsters!</p>
+                <h3><span lang="en">Shoot</span><span lang="fr">Tir</span></h3>
+                <p lang="en">As sponges, we scrub the floor as we move, automatically cleaning it. But we can also soak up water from sinks and spit out bubbles to clean the floor and even defeat monsters!</p>
+                <p lang="fr">En tant qu'éponges, on frotte le sol en se déplaçant, ce qui le nettoie automatiquement. Mais on peut aussi absorber l'eau des éviers et cracher des bulles pour nettoyer le sol et même vaincre les monstres !</p>
             </div>
         </div>
         <div class="feature reverse">
             <img class="media" src="../../assets/images/projects/sponge/SpongeUltimate.gif" alt="Sponge ultimate bubble">
             <div>
                 <h3>Ultimate</h3>
-                <p>We also have an ultimate ability that charges by defeating enemies. Once ready, it launches a giant bubble that explodes on the ground, cleaning a large area and dealing area-of-effect damage.</p>
+                <p lang="en">We also have an ultimate ability that charges by defeating enemies. Once ready, it launches a giant bubble that explodes on the ground, cleaning a large area and dealing area-of-effect damage.</p>
+                <p lang="fr">On dispose aussi d'une capacité ultime qui se charge en battant des ennemis. Une fois prête, elle lance une bulle géante qui explose au sol, nettoie une grande zone et inflige des dégâts de zone.</p>
             </div>
         </div>
     </section>
 
     <section class="section">
-        <h2>Optimization</h2>
+        <h2><span lang="en">Optimization</span><span lang="fr">Optimisation</span></h2>
         <div class="split">
-            <div>
+            <div lang="en">
                 <p>Points are earned by having the cleanest surface area on the wall. To determine this, we analyze the RVT texture and calculate the percentage of visible dirt, pixel by pixel.</p>
                 <p>This method is heavy, so we use a smaller texture that mirrors the RVT. Instead of checking 1 048 576 pixels on a 1024×1024 texture, we only check 4 096 pixels on a dedicated 64×64 texture.</p>
                 <p>It slightly reduces precision, but the performance gain prevents lag on the hardware provided for the event.</p>
+            </div>
+            <div lang="fr">
+                <p>Les points se gagnent en ayant la plus grande surface propre sur le mur. Pour la mesurer, on analyse la texture RVT et on calcule le pourcentage de saleté visible, pixel par pixel.</p>
+                <p>Cette méthode est coûteuse, donc on utilise une texture plus petite qui reflète la RVT. Au lieu de vérifier 1 048 576 pixels sur une texture 1024×1024, on n'en vérifie que 4 096 sur une texture dédiée de 64×64.</p>
+                <p>La précision baisse un peu, mais le gain de performance évite les ralentissements sur le matériel fourni pour l'événement.</p>
             </div>
             <img class="media" src="../../assets/images/projects/sponge/ScaledRTV.png" alt="Scaled RVT texture">
         </div>
     </section>
 
-    <footer class="page-footer">Press POWER on the console to go back</footer>
+    <footer class="page-footer">
+        <span lang="en">Press POWER on the console to go back</span>
+        <span lang="fr">Appuie sur POWER sur la console pour revenir</span>
+    </footer>
 </body>
 </html>

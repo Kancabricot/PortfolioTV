@@ -94,6 +94,11 @@ export class CaseShowcase {
         this.onSelect(this.project, this.selected, this.cases.length);
     }
 
+    /** Redraws the jackets in the current language. */
+    refreshTexts() {
+        this.cases.forEach((gameCase) => gameCase.userData.refreshTexts());
+    }
+
     next() { this.select(this.selected + 1); }
 
     previous() { this.select(this.selected - 1); }

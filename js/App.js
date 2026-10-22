@@ -3,16 +3,9 @@ import { ProjectPanel } from './ui/ProjectPanel.js';
 import { AboutPanel } from './ui/AboutPanel.js';
 import { ScreenOverlay } from './ui/ScreenOverlay.js';
 import { FloatingButton, Hint, Tooltip } from './ui/SceneHints.js';
-
-const TEXT = {
-    hint: 'Clique sur un carton ou un cadre pour explorer',
-    back: '◀ Retour',
-    power: '⏻ POWER',
-    sound: (muted) => (muted ? 'SON : OFF' : 'SON : ON'),
-    frameLabel: { photo: 'Photo', diploma: 'Diplôme', text: 'About me' },
-    projectCount: (n) => `${n} projet${n > 1 ? 's' : ''}`,
-    powerOff: '<strong>⏻ POWER</strong> · revenir au bureau',
-};
+import {
+    LANGUAGES, getLanguage, onLanguageChange, pageUrl, setLanguage, tr, ui,
+} from './i18n.js';
 
 const MOBILE_QUERY = window.matchMedia('(max-width: 760px)');
 
@@ -23,6 +16,7 @@ const MOBILE_QUERY = window.matchMedia('(max-width: 760px)');
  *   tv        -> a project is launched and shown inside the TV
  *   about     -> overview of the about-me frames, with the about panel
  *   closeup   -> the camera looks at a single frame
+ * Every text comes from js/data (see js/i18n.js) and is refreshed on language change.
  */
 export class App {
     constructor({ config, rig, interaction, cartons, showcase, tv, gameConsole, aboutCorner, about, sound }) {
@@ -38,27 +32,24 @@ export class App {
 
         this.state = 'home';
         this.category = null;
+        this.project = null; // project on screen in the 'tv' state
         this.busy = false; // true during the launch / power-off transitions
 
-        const ui = document.getElementById('ui');
-        this.tooltip = new Tooltip(ui);
-        this.hint = new Hint(ui, TEXT.hint);
-        this.panel = new ProjectPanel(ui, {
+        const layer = document.getElementById('ui');
+        this.tooltip = new Tooltip(layer);
+        this.hint = new Hint(layer, ui('hint'));
+        this.panel = new ProjectPanel(layer, {
             onPrevious: () => showcase.previous(),
             onNext: () => showcase.next(),
             onBack: () => this.goHome(),
             onLaunch: () => this.launch(showcase.project),
         });
 
-        this.aboutPanel = new AboutPanel(ui, about, { onBack: () => this.back() });
-        this.backButton = new FloatingButton(ui, TEXT.back, () => this.back());
-        this.soundToggle = new FloatingButton(ui, TEXT.sound(sound.muted), () => {
-            sound.setMuted(!sound.muted);
-            this.soundToggle.el.textContent = TEXT.sound(sound.muted);
-            sound.play('click');
-        });
-        this.soundToggle.el.classList.add('sound-toggle', 'visible');
-        this.screenOverlay = new ScreenOverlay(ui, { powerLabel: TEXT.power, onPower: () => this.powerOff() });
+        this.aboutPanel = new AboutPanel(layer, about, { onBack: () => this.back() });
+        this.backButton = new FloatingButton(layer, ui('back'), () => this.back());
+        this.screenOverlay = new ScreenOverlay(layer, { powerLabel: ui('power'), onPower: () => this.powerOff() });
+        this.createTopBar(layer);
+        onLanguageChange(() => this.refreshTexts());
 
         showcase.onSelect = (project, index, count) => {
             this.panel.show(this.category, project, index, count);
@@ -74,6 +65,57 @@ export class App {
         window.addEventListener('keydown', (e) => this.onKey(e));
     }
 
+    /** Language and sound buttons in the top right corner. */
+    createTopBar(layer) {
+        const bar = document.createElement('div');
+        bar.className = 'top-bar';
+        bar.innerHTML = `
+            <button class="pixel-button" data-action="language" aria-label="Language / Langue">
+                ${LANGUAGES.map((lang) => `<span data-lang="${lang}">${lang.toUpperCase()}</span>`).join(' / ')}
+            </button>
+            <button class="pixel-button" data-action="sound"></button>
+        `;
+        layer.appendChild(bar);
+
+        this.languageButton = bar.querySelector('[data-action="language"]');
+        this.soundButton = bar.querySelector('[data-action="sound"]');
+        this.languageButton.addEventListener('click', () => {
+            const next = LANGUAGES[(LANGUAGES.indexOf(getLanguage()) + 1) % LANGUAGES.length];
+            setLanguage(next);
+            this.sound.play('click');
+        });
+        this.soundButton.addEventListener('click', () => {
+            this.sound.setMuted(!this.sound.muted);
+            this.updateTopBar();
+            this.sound.play('click');
+        });
+        this.updateTopBar();
+    }
+
+    updateTopBar() {
+        this.languageButton.querySelectorAll('[data-lang]').forEach((el) => {
+            el.classList.toggle('active', el.dataset.lang === getLanguage());
+        });
+        this.soundButton.textContent = ui('sound', this.sound.muted);
+    }
+
+    /** Re-renders every text of the page and of the 3D scene in the current language. */
+    refreshTexts() {
+        this.updateTopBar();
+        this.hint.el.textContent = ui('hint');
+        this.backButton.el.textContent = ui('back');
+        this.tooltip.hide();
+        this.panel.refresh();
+        this.aboutPanel.refresh();
+        this.cartons.refreshTexts();
+        this.aboutCorner.refreshTexts();
+        this.showcase.refreshTexts();
+        if (this.project) {
+            this.tv.reloadPage(pageUrl(this.project.page));
+            this.screenOverlay.reload(pageUrl(this.project.page));
+        }
+    }
+
     registerCartons() {
         for (const carton of this.cartons.cartons) {
             const { category } = carton.userData;
@@ -82,7 +124,7 @@ export class App {
                     this.cartons.setHovered(carton, true);
                     this.sound.play('hover');
                     if (this.state === 'home') {
-                        this.tooltip.show(`<strong>${category.label}</strong> · ${TEXT.projectCount(category.projects.length)}`, e);
+                        this.tooltip.show(`<strong>${tr(category.label)}</strong> · ${ui('projectCount', category.projects.length)}`, e);
                     }
                 },
                 onMove: (_, e) => this.tooltip.move(e),
@@ -103,7 +145,7 @@ export class App {
                     if (this.state === 'tv' || this.state === 'closeup') return;
                     this.aboutCorner.setHovered(holder, true);
                     this.sound.play('hover');
-                    if (this.state !== 'about') this.tooltip.show(`<strong>${TEXT.frameLabel[frame.kind]}</strong>`, e);
+                    if (this.state !== 'about') this.tooltip.show(`<strong>${ui('frameLabel')[frame.kind]}</strong>`, e);
                 },
                 onMove: (_, e) => this.tooltip.move(e),
                 onLeave: () => {
@@ -125,7 +167,7 @@ export class App {
                 if (this.state !== 'tv') return;
                 this.gameConsole.setPowerHighlight(true);
                 this.sound.play('hover');
-                this.tooltip.show(TEXT.powerOff, e);
+                this.tooltip.show(ui('powerOff'), e);
             },
             onMove: (_, e) => this.tooltip.move(e),
             onLeave: () => {
@@ -262,20 +304,21 @@ export class App {
         this.busy = true;
         this.state = 'tv';
         this.category = null;
+        this.project = project;
 
         this.sound.play('launch');
         this.panel.hide();
         this.tooltip.hide();
         this.showcase.close({ selectedTo: this.gameConsole.slotPosition() });
         this.cartons.setOpen(null);
-        this.tv.setLoading(project.title.toUpperCase());
+        this.tv.setLoading(tr(project.title).toUpperCase());
 
         await this.rig.goTo(this.tvView());
         this.sound.play('tvOn');
         if (MOBILE_QUERY.matches) {
-            this.screenOverlay.show(project.page);
+            this.screenOverlay.show(pageUrl(project.page));
         } else {
-            this.tv.showPage(project.page);
+            this.tv.showPage(pageUrl(project.page));
             this.tv.setInteractive(true);
         }
         this.busy = false;
@@ -297,6 +340,7 @@ export class App {
             await this.tv.hidePage();
         }
         this.state = 'home';
+        this.project = null;
         this.hint.show();
         await this.rig.goTo('home');
         this.busy = false;

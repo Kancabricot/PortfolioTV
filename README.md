@@ -29,6 +29,15 @@ Puis ouvrir http://localhost:5173 (aucune dépendance à installer, Three.js est
 | Régler la caméra du coin About me           | `aboutView` dans `scene.config.js` |
 | Intro caméra, poussière flottante           | `camera.views.intro`, `ambience.dust` dans `scene.config.js` |
 | Modifier / ajouter des sons                 | `EFFECTS` dans `js/core/Sound.js` |
+| Textes de l'interface (EN / FR)             | `js/data/ui-text.js`            |
+
+### Langues (anglais par défaut, français)
+
+- Dans `projects.js` et `about.js`, un texte peut être une simple chaîne (identique dans les deux langues)
+  ou un objet `{ en: '...', fr: '...' }`.
+- Dans les pages projet, écris chaque texte deux fois : `<p lang="en">...</p>` puis `<p lang="fr">...</p>`.
+  Seule la langue choisie s'affiche (voir `_template.html`).
+- Le choix de langue est mémorisé dans le navigateur.
 
 ### Modèles 3D
 
